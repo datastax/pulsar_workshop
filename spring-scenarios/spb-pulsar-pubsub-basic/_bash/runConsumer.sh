@@ -45,7 +45,7 @@ usage() {
 
 if [[ $# -eq 0 || $# -gt 7 ]]; then
    usage
-   errExit 10 "Incorrect input parametere count!"
+   errExit 10 "Incorrect input parameter count!"
 fi
 
 while [[ "$#" -gt 0 ]]; do
