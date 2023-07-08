@@ -1,9 +1,7 @@
 import argparse
-import logging
 import random
 import re
 import string
-import sys
 import traceback
 from abc import ABC, abstractmethod
 
@@ -11,6 +9,7 @@ import pulsar
 from jproperties import Properties
 
 from PulsarWorkshopLog import *
+
 
 class InvalidArgumentError(Exception):
     pass
@@ -26,7 +25,7 @@ def get_prop_val(properties, key, default):
 
 
 # Remove the leading and trailing quote
-def dequote(s):
+def de_quote(s):
     return re.sub(r'^"|"$', '', s)
 
 
@@ -34,8 +33,9 @@ def str2bool(s):
     return s.lower() in ['true', '1', 't', 'y', 'yes']
 
 
-def random_alpha_numeric(l):
-    return ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(l))
+def random_alpha_numeric(length):
+    return ''.join(
+        random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(length))
 
 
 class PulsarWorkshopCmdApp(ABC):

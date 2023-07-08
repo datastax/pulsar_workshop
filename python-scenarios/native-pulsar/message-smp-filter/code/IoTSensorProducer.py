@@ -45,15 +45,15 @@ class IoTSensorProducer(PwUtil.PulsarWorkshopCmdApp):
                     field_vals = line.strip().split(',')
 
                     msg_payload = PwPojo.IoTSensorDataRaw(
-                        ts=PwUtil.dequote(field_vals[0]),
-                        device=PwUtil.dequote(field_vals[1]),
-                        co=float(PwUtil.dequote(field_vals[2])),
-                        humidity=float(PwUtil.dequote(field_vals[3])),
-                        light=PwUtil.str2bool(PwUtil.dequote(field_vals[4])),
-                        lpg=float(PwUtil.dequote(field_vals[5])),
-                        motion=PwUtil.str2bool(PwUtil.dequote(field_vals[6])),
-                        smoke=float(PwUtil.dequote(field_vals[7])),
-                        temp=float(PwUtil.dequote(field_vals[8]))
+                        ts=PwUtil.de_quote(field_vals[0]),
+                        device=PwUtil.de_quote(field_vals[1]),
+                        co=float(PwUtil.de_quote(field_vals[2])),
+                        humidity=float(PwUtil.de_quote(field_vals[3])),
+                        light=PwUtil.str2bool(PwUtil.de_quote(field_vals[4])),
+                        lpg=float(PwUtil.de_quote(field_vals[5])),
+                        motion=PwUtil.str2bool(PwUtil.de_quote(field_vals[6])),
+                        smoke=float(PwUtil.de_quote(field_vals[7])),
+                        temp=float(PwUtil.de_quote(field_vals[8]))
                     )
                     message_id = self.producer.send(msg_payload)
                     logging.debug(">>> successfully published the message '{}' id='{}'".format(msg_payload, message_id))
