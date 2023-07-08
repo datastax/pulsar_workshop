@@ -1,0 +1,4 @@
+jproperties
+pulsar-client
+pulsar-client[avro]
+pulsar-client[functions]  

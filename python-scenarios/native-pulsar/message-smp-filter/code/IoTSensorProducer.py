@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 import fileinput
@@ -55,7 +56,7 @@ class IoTSensorProducer(PwUtil.PulsarWorkshopCmdApp):
                         temp=float(PwUtil.dequote(field_vals[8]))
                     )
                     message_id = self.producer.send(msg_payload)
-                    print("Successfully published the message '{}' id='{}'".format(msg_payload, message_id))
+                    logging.debug(">>> successfully published the message '{}' id='{}'".format(msg_payload, message_id))
                     msg_sent = msg_sent + 1
                 else:
                     first_line = False

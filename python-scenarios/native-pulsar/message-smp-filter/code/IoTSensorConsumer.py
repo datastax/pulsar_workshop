@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 
@@ -13,7 +14,7 @@ import PulsarWorkShopPoJo as PwPojo
 
 
 def get_subscription_type(type_str):
-    if (type_str is None):
+    if type_str is None:
         return ConsumerType.Exclusive
     else:
         type_str_upper = type_str.upper()
@@ -29,6 +30,7 @@ def get_subscription_type(type_str):
         else:
             print(f"Unrecognized subscription type: {type_str}. Use default \"EXCLUSIVE\" type!")
             return ConsumerType.Exclusive
+
 
 class IoTSensorConsumer(PwUtil.PulsarWorkshopCmdApp):
     def __init__(self):
@@ -63,10 +65,10 @@ class IoTSensorConsumer(PwUtil.PulsarWorkshopCmdApp):
             if msg_recv < self.num_msg_to_proc or self.num_msg_to_proc == -1:
                 msg = self.consumer.receive()
                 try:
-                    print("Acknowledge the received message '{}' id='{}'".format(msg.data(), msg.message_id()))
+                    logging.debug(">>> Acknowledge the received message '{}' id='{}'".format(msg.data(), msg.message_id()))
                     self.consumer.acknowledge(msg)
                 except Exception:
-                    print("Failed to receive the message; un-acknowledge it!")
+                    logging.error(">>> Failed to receive the message; un-acknowledge it!")
                     self.consumer.negative_acknowledge(msg)
                 msg_recv = msg_recv + 1
             else:

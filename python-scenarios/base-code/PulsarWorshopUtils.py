@@ -1,13 +1,16 @@
-import os
+import argparse
+import logging
+import random
+import re
+import string
 import sys
 import traceback
 from abc import ABC, abstractmethod
-import argparse
-import pulsar
-import re
-from jproperties import Properties
-import random, string
 
+import pulsar
+from jproperties import Properties
+
+from PulsarWorkshopLog import *
 
 class InvalidArgumentError(Exception):
     pass
@@ -37,6 +40,8 @@ def random_alpha_numeric(l):
 
 class PulsarWorkshopCmdApp(ABC):
     def __init__(self):
+        setup_logging(filename=self.__class__.__name__, append_time=True)
+
         self.args = None
         self.unknown = None
 
@@ -64,6 +69,8 @@ class PulsarWorkshopCmdApp(ABC):
 
     @abstractmethod
     def execute(self):
+        logging.info(">>> Executing the required message processing task ...")
+
         if self.pulsar_client is None:
             service_url = get_prop_val(self.client_conn_properties, 'brokerServiceUrl', '')
             if service_url.isspace():
@@ -109,6 +116,8 @@ class PulsarWorkshopCmdApp(ABC):
             self.pulsar_client.close()
 
     def process_input_params(self):
+        logging.info(">>> Parsing input parameters ...")
+
         self.args, self.unknown = self.parser.parse_known_args()
 
         valid_num_msg = True
@@ -144,23 +153,23 @@ class PulsarWorkshopCmdApp(ABC):
         self.process_extended_input_params()
 
     def run_cmd_app(self):
+        logging.info(">>> Start message processing application ...")
+
         try:
             self.process_input_params()
             self.execute()
         except InvalidArgumentError:
-            print("Invalid commandline input parameter error detected ...")
-            print("-------------------------------------")
+            logging.error("Invalid commandline input parameter error detected ...")
             traceback.print_exc()
         except InvalidConfigError:
-            print("Invalid config parameter error detected ...")
-            print("-------------------------------------")
+            logging.error("Invalid config parameter error detected ...")
             traceback.print_exc()
         except SystemExit:
             pass
         except:
-            print("Unexpected errors detected ...")
-            print("-------------------------------------")
+            logging.error("Unexpected errors detected ...")
             traceback.print_exc()
         finally:
+            logging.info(">>> Terminate message processing application ...")
             self.term_cmd_app()
             sys.exit()
