@@ -23,7 +23,7 @@ CUR_SCRIPT_FOLDER=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null &&
 SCENARIO_HOMEDIR=$( cd -- "${CUR_SCRIPT_FOLDER}/.." &> /dev/null && pwd )
 
 source "${SCENARIO_HOMEDIR}/../../../_bash/utilities.sh"
-# DEBUG=true
+#DEBUG=true
 
 echo
 
@@ -32,18 +32,19 @@ echo
 #
 usage() {   
    echo
-   echo "Usage: runConsumer.sh [-h]" 
+   echo "Usage: runProducer.sh [-h]" 
    echo "                      -t <topic_name>"
    echo "                      -n <message_number>"
    echo "                      -cc <client_conf_file>" 
    echo "                      [-na]"
    echo "       -h  : Show usage info"
    echo "       -t  : (Required) The topic name to publish messages to."
-   echo "       -n  : (Required) The number of messages to consume."
+   echo "       -n  : (Required) The number of messages to produce."
    echo "       -cc : (Required) 'client.conf' file path."
    echo "       -na : (Optional) Non-Astra Streaming (Astra streaming is the default)."
    echo
 }
+
 
 if [[ $# -eq 0 || $# -gt 8 ]]; then
    usage
@@ -75,20 +76,16 @@ if ! [[ -f "${clntConfFile}" ]]; then
    errExit 40 "The specified 'client.conf' file is invalid!"
 fi
 
-clientAppJar="${SCENARIO_HOMEDIR}/client-app/target/np-msgenrich-avro-clientapp-1.0.0.jar"
-if ! [[ -f "${clientAppJar}" ]]; then
-  errExit 50 "Can't find the client app jar file. Please first build the programs!"
+iotDataSrcFile="${SCENARIO_HOMEDIR}/../../../_raw_data_src/sensor_telemetry.csv"
+if ! [[ -f "${iotDataSrcFile}" ]]; then
+  errExit 50 "Can't find the IoT sensor data source file is invalid!"
 fi
 
-# generate a random alphanumeric string with length 20
-randomStr=$(cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 20 | head -n 1)
-
-javaCmd="java -cp ${clientAppJar} \
-    com.example.pulsarworkshop.IoTSensorConsumerAvro \
-    -n ${msgNum} -t ${tpName} -c ${clntConfFile} -sbn mysub-${randomStr}"
+pythonCmd="python ${SCENARIO_HOMEDIR}/code/IoTSensorProducer.py \
+    -n ${msgNum} -t ${tpName} -c ${clntConfFile} -csv ${iotDataSrcFile}"
 if [[ ${astraStreaming} -eq 1 ]]; then
-  javaCmd="${javaCmd} -a"
+  pythonCmd="${pythonCmd} -a"
 fi
-debugMsg="javaCmd=${javaCmd}"
+debugMsg "pythonCmd=${pythonCmd}"
 
-eval ${javaCmd}
+eval ${pythonCmd}

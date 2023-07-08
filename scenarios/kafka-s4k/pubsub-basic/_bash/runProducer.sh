@@ -51,7 +51,7 @@ usage() {
 
 if [[ $# -eq 0 || $# -gt 8 ]]; then
    usage
-   errExit 10 "Incorrect input parametere count!"
+   errExit 10 "Incorrect input parameter count!"
 fi
 
 astraStreaming=1
