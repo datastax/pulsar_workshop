@@ -1,4 +1,25 @@
+We will show you how to built a streaming solution with vector search for real-time product recommendations. 
+Here is the flow we will build:
+![image](https://github.com/devinbost/pulsar_workshop/assets/7418031/c4298566-3958-443b-8986-f4b4e8877bd4)
 
+See these functions:
+- openai-chat-inquiry-function
+- openai-product-embedding-function
+
+  
+For OpenAI examples:
+`CREATE TABLE IF NOT EXISTS openai.order_with_embedding (order_id int, customer_id int, customer_first_name text, customer_last_name text, customer_email text, customer_phone text, customer_address text, product_id int, product_name text, product_description text, product_price double, order_quantity int, order_date text, total_amount double, shipping_address text, embedding VECTOR<float,1536>, PRIMARY KEY ((order_id), customer_id));`
+`CREATE INDEX IF NOT EXISTS on openai.order_with_embedding(customer_id);`
+`CREATE CUSTOM INDEX IF NOT EXISTS product_ann_index ON openai.order_with_embedding(embedding) USING 'StorageAttachedIndex'`
+
+
+CREATE TABLE IF NOT EXISTS openai.order_with_embedding (order_id int, customer_id int,  , PRIMARY KEY ((order_id), customer_id));
+
+
+TO DO: Add more instructions.
+
+
+--- 
 
 To create the Avro schema from the initial C* table definition, that can be done with GPT-4:
 
@@ -19,4 +40,6 @@ To create the downstream tables:
 `create table device.current_value ( tag_id text, data_quality int, event_time timestamp, event_value double, PRIMARY KEY ((tag_id, data_quality), event_time)) WITH CLUSTERING ORDER BY (event_time DESC) and default_time_to_live = 0 AND gc_grace_seconds = 864000 and max_index_interval = 2048;`
 
 
+Create config.properties file in the resources directory for any function that requires credentials. 
+Be careful to not commit this file to your repo!
 

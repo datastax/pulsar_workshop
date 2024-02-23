@@ -25,23 +25,28 @@
 
   <parent>
     <groupId>com.example.pulsarworkshop</groupId>
-    <artifactId>standalone-functions</artifactId>
+    <artifactId>native-pulsar</artifactId>
     <version>1.0.0</version>
-    <relativePath>../pom.xml</relativePath>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>accumulate-by-count-function</artifactId>
   <packaging>jar</packaging>
 
+  <artifactId>openai-chat-inquiry-function</artifactId>
+
   <properties>
-    <datastax.version>4.14.1</datastax.version>
+    <datastax.version>4.17.0</datastax.version>
     <lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
     <lombok.version>1.18.22</lombok.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <jackson.version>2.15.1</jackson.version>
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>com.theokanning.openai-gpt3-java</groupId>
+      <artifactId>service</artifactId>
+      <version>0.13.0</version>
+    </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>np-common</artifactId>
@@ -75,7 +80,6 @@
       <groupId>org.apache.maven.plugins</groupId>
       <artifactId>maven-compiler-plugin</artifactId>
       <version>3.11.0</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -83,34 +87,35 @@
       <version>5.10.0-M1</version>
       <scope>test</scope>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
     <dependency>
       <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-      <version>1.9.5</version>
+      <artifactId>mockito-core</artifactId>
+      <version>5.3.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.example.pulsarworkshop</groupId>
+      <artifactId>np-common</artifactId>
+      <version>1.0.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.datastax.oss</groupId>
+      <artifactId>java-driver-core</artifactId>
+      <version>${datastax.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.datastax.oss</groupId>
+      <artifactId>java-driver-query-builder</artifactId>
+      <version>${datastax.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.datastax.oss</groupId>
+      <artifactId>java-driver-mapper-runtime</artifactId>
+      <version>${datastax.version}</version>
+    </dependency>
   </dependencies>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.4</version>
-        <executions>
-          <execution>
-            <id>test</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>add-source</goal>
-            </goals>
-            <configuration>
-              <sources>
-                <source>${basedir}/target/generated-sources</source>
-              </sources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 </project>
